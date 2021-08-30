@@ -1,7 +1,10 @@
 const fs = require("fs");
 const express = require("express");
-const app = express();
+const bodyParser = require("body-parser");
 
+const app = express();
+//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 const port = 3000;
 
 app.get("/", (req, res) => {
@@ -13,8 +16,11 @@ app.get("/", (req, res) => {
 //registered users
 
 app.post("/registered-users", (req, res) => {
-  console.log("request - registered users");
-  res.send("post ricevuta");
+  dataRegistration = req.body;
+
+  console.log(dataRegistration);
+
+  res.send({ name: "mario" });
 });
 
 //end registered users
