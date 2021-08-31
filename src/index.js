@@ -20,7 +20,7 @@ app.post("/registered-users", (req, res) => {
 
   console.log(dataRegistration);
 
-  res.send({ name: "mario" });
+  res.send({ state_registration: "success" });
 });
 
 //end registered users
