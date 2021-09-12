@@ -32,7 +32,7 @@ fs.readdir(__dirname + "/file", function (err: string, nameFiles: string[]) {
     return console.log("Unable to scan directory: " + err);
   }
   nameFiles.forEach((nameFile) => {
-    console.log(nameFile);
+    //console.log(nameFile);
 
     files.push(new MyFile(nameFile, uuidv4()));
   });
@@ -45,14 +45,31 @@ app.use(bodyParser.json());
 
 const port = 3000;
 
+app.use("/file", express.static(__dirname + "/file"));
+
 app.get("/", (req: any, res: { send: (arg0: string) => void }) => {
   res.send("il server funziona");
 });
+
 // ^ initial configurations
 
 // get all file
 
 app.get("/allFiles", (req: any, res: { send: (arg0: MyFile[]) => void }) => {
+  fs.readdir(__dirname + "/file", function (err: string, nameFiles: string[]) {
+    if (err) {
+      return console.log("Unable to scan directory: " + err);
+    }
+
+    files = nameFiles.map((nameFile) => new MyFile(nameFile, uuidv4()));
+
+    /* nameFiles.forEach((nameFile) => {
+      console.log(nameFile);
+
+      files.push(new MyFile(nameFile, uuidv4()));
+    }); */
+  });
+
   res.send(files);
 });
 
