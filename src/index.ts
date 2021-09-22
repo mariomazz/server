@@ -69,8 +69,11 @@ app.get("/allFiles", (req: any, res: { send: (arg0: MyFile[]) => void }) => {
       files.push(new MyFile(nameFile, uuidv4()));
     }); */
   });
-
-  res.send(files);
+  if (files == []) {
+    res.send([]);
+  } else {
+    res.send(files);
+  }
 });
 
 // ^ get all file
@@ -103,7 +106,54 @@ app.post(
   }
 );
 
-// end app flutter  receive file
+// end app flutter receive file
+
+//remove file
+
+app.post(
+  "/delete-file",
+  (req: { body: any }, res: { send: (arg0: string) => void }) => {
+    fs.readdir(
+      __dirname + "/file",
+      function (err: string, nameFiles: string[]) {
+        if (err) {
+          return console.log("Unable to scan directory: " + err);
+        }
+
+        files = nameFiles.map((nameFile) => new MyFile(nameFile, uuidv4()));
+
+        /* nameFiles.forEach((nameFile) => {
+        console.log(nameFile);
+  
+        files.push(new MyFile(nameFile, uuidv4()));
+      }); */
+      }
+    );
+    try {
+      var nameFile = req.body.key;
+
+      files.forEach(function (file, index) {
+        if (file.nameFile == nameFile) {
+          files.splice(index);
+        }
+      });
+
+      var filePath = __dirname + "/file/" + nameFile;
+      fs.unlinkSync(filePath);
+
+      res.send("success");
+      console.log("file deleted : " + nameFile);
+    } catch (err) {
+      var nameFile = req.body.key;
+
+      res.send("error");
+
+      console.log("errore - file non cancellato : " + nameFile);
+    }
+  }
+);
+
+//end remove file
 
 app.listen(port, () => {
   console.log(`server listening at http://${ip}:${port}`);
